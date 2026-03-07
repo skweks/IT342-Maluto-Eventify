@@ -1,93 +1,78 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Alert from './component/Alert'; // Ensure this path matches your Alert.jsx location
+import Alert from './component/Alert'; // Import the custom Alert component
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(''); // State to hold the error message
+  const [formData, setFormData] = useState({ email: '', password: '' });
+
+  // State for managing the custom alert
+  const [alertConfig, setAlertConfig] = useState({ message: '', type: 'error' });
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous error before a new attempt
-
     try {
-      // POST request to your Spring Boot backend [cite: 119, 278]
-      const response = await axios.post('http://localhost:8080/api/v1/auth/login', {
-        email,
-        password
-      });
+      const response = await axios.post('http://localhost:8080/api/v1/auth/login', formData);
 
-      // If successful, navigate to the Dashboard [cite: 136]
-      navigate('/dashboard');
+      // Show success alert using Alert.jsx logic
+      setAlertConfig({ message: "Login successful!", type: 'success' });
+
+      // Store token/user data if necessary
+      localStorage.setItem('token', response.data.token);
+
+      // Delay navigation so the user sees the success message
+      setTimeout(() => navigate('/dashboard'), 1500);
     } catch (err) {
-      // Capture the specific error message from your AuthController (e.g., "Account not found") [cite: 330]
-      const errorMessage = err.response?.data || "Login failed. Please try again.";
-      setError(errorMessage);
+      // Show error alert for failed attempts
+      setAlertConfig({
+        message: err.response?.data || "Invalid email or password",
+        type: 'error'
+      });
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4 relative">
-      {/* Efficient use of the Alert component:
-          It only renders if 'error' has a value.
-      */}
-      <Alert
-        message={error}
-        type="error"
-        onClose={() => setError('')}
-      />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+      {/* Conditionally render the Alert component */}
+      {alertConfig.message && (
+        <Alert
+          message={alertConfig.message}
+          type={alertConfig.type}
+          onClose={() => setAlertConfig({ message: '', type: 'error' })}
+        />
+      )}
 
-      <div className="flex w-full max-w-4xl bg-white rounded-[2.5rem] shadow-xl overflow-hidden border">
-        {/* Left Side: Branding */}
-        <div className="hidden md:flex flex-col items-center justify-center w-1/2 bg-orange-50/30 p-12 border-r relative">
-          <h1 className="text-[#ff9c5e] font-bold text-2xl absolute top-10 left-10">Eventify</h1>
-          <span className="text-6xl mb-4">🎓</span>
-          <h2 className="text-xl font-bold">Discover Campus Events</h2>
-        </div>
+      <div className="w-full max-w-md bg-white p-10 rounded-3xl shadow-lg text-center">
+        <h1 className="text-[#ff9c5e] font-bold text-3xl mb-8">Eventify</h1>
 
-        {/* Right Side: Form [cite: 437] */}
-        <div className="w-full md:w-1/2 p-12">
-          <h2 className="text-2xl font-bold mb-8 text-gray-800">Log In</h2>
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">University Email</label>
-              <input
-                type="email"
-                placeholder="student@cit.edu"
-                className="w-full border p-3.5 rounded-xl focus:ring-1 focus:ring-[#ff9c5e] outline-none transition-all"
-                onChange={e => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                className="w-full border p-3.5 rounded-xl focus:ring-1 focus:ring-[#ff9c5e] outline-none transition-all"
-                onChange={e => setPassword(e.target.value)}
-                required
-              />
-            </div>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <input
+            type="email"
+            placeholder="University Email"
+            className="w-full border p-3.5 rounded-xl outline-none"
+            onChange={e => setFormData({...formData, email: e.target.value})}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full border p-3.5 rounded-xl outline-none"
+            onChange={e => setFormData({...formData, password: e.target.value})}
+            required
+          />
+          <button
+            type="submit"
+            className="w-full bg-[#ff9c5e] text-white py-4 rounded-xl font-bold mt-4 transition"
+          >
+            Log In
+          </button>
+        </form>
 
-            <button
-              type="submit"
-              className="w-full bg-[#ff9c5e] text-white py-4 rounded-xl font-bold hover:shadow-lg hover:bg-[#e88b4d] transition-all transform active:scale-[0.98]"
-            >
-              Sign in
-            </button>
-          </form>
-
-          <p className="mt-8 text-center text-sm text-gray-500">
-            Don't have an account?
-            <Link to="/register" className="text-[#ff9c5e] font-bold hover:underline ml-1">
-              Sign up
-            </Link>
-          </p>
-        </div>
+        <p className="mt-8 text-sm">
+          Don't have an account? <Link to="/register" className="text-[#ff9c5e] font-bold">Register</Link>
+        </p>
       </div>
     </div>
   );

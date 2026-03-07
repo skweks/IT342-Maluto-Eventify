@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Alert from './component/Alert'; // Import the custom Alert component
 
 const Register = () => {
   const [role, setRole] = useState('STUDENT');
   const [formData, setFormData] = useState({ fullName: '', schoolId: '', email: '', password: '' });
+
+  // State for the custom alert
+  const [alertConfig, setAlertConfig] = useState({ message: '', type: 'error' });
+
   const navigate = useNavigate();
 
   const isStudent = role === 'STUDENT';
@@ -14,15 +19,32 @@ const Register = () => {
     e.preventDefault();
     try {
       await axios.post('http://localhost:8080/api/v1/auth/register', { ...formData, role });
-      alert("Account created!");
-      navigate('/login');
+
+      // Use custom alert for success
+      setAlertConfig({ message: "Account created!", type: 'success' });
+
+      // Optional: Delay navigation so the user can see the success alert
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
-      alert(err.response?.data || "Registration failed");
+      // Use custom alert for errors
+      setAlertConfig({
+        message: err.response?.data || "Registration failed",
+        type: 'error'
+      });
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+      {/* Render the Alert component if there is a message */}
+      {alertConfig.message && (
+        <Alert
+          message={alertConfig.message}
+          type={alertConfig.type}
+          onClose={() => setAlertConfig({ message: '', type: 'error' })}
+        />
+      )}
+
       <div className="w-full max-w-md bg-white p-10 rounded-3xl shadow-lg text-center">
         <h1 style={{color}} className="font-bold text-3xl mb-8">Eventify</h1>
         <div className="flex mb-8 border rounded-xl overflow-hidden">
@@ -41,4 +63,5 @@ const Register = () => {
     </div>
   );
 };
+
 export default Register;
