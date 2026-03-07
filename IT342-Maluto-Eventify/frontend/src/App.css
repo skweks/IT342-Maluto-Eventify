@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 .App {
   text-align: center;
 }
@@ -35,4 +37,32 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Subtle background gradient for the whole app */
+.auth-container {
+  background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+  min-height: 100vh;
+}
+
+/* Custom shadow for the cards to match Figma's soft look */
+.figma-card {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05),
+              0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+/* Blue primary color matching your architecture's React Client color */
+.text-primary-blue {
+  color: #2563eb;
+}
+
+.bg-primary-blue {
+  background-color: #2563eb;
 }
