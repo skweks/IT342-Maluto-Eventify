@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Account"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"/>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/roleTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="#6200EE"
+        app:tabSelectedTextColor="#6200EE">
+        <com.google.android.material.tabs.TabItem android:text="Student" />
+        <com.google.android.material.tabs.TabItem android:text="Organizer" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="24dp">
+
+            <TextView android:id="@+id/tvRegTitle" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Student Registration" android:textSize="22sp" android:textStyle="bold" android:layout_marginBottom="20dp"/>
+
+            <EditText android:id="@+id/etFullName" android:layout_width="match_parent" android:layout_height="50dp" android:hint="Full Name" android:layout_marginBottom="10dp"/>
+            <EditText android:id="@+id/etEmail" android:layout_width="match_parent" android:layout_height="50dp" android:hint="Email" android:layout_marginBottom="10dp"/>
+            <EditText android:id="@+id/etPassword" android:layout_width="match_parent" android:layout_height="50dp" android:hint="Password" android:inputType="textPassword" android:layout_marginBottom="10dp"/>
+
+            <EditText android:id="@+id/etIdField" android:layout_width="match_parent" android:layout_height="50dp" android:hint="Student ID" android:layout_marginBottom="20dp"/>
+
+            <Button android:id="@+id/btnRegister" android:layout_width="match_parent" android:layout_height="55dp"
+                android:text="REGISTER AS STUDENT" android:backgroundTint="#6200EE" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

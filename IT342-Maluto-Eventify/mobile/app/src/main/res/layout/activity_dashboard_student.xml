@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="#6200EE"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/welcomeStudent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Student Dashboard"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_alignParentTop="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cebu Campus"
+            android:textColor="#CCFFFFFF"
+            android:layout_below="@id/welcomeStudent"
+            android:layout_marginTop="4dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Search Campus Events..."
+            android:padding="12dp"
+            android:layout_alignParentBottom="true"
+            android:background="@android:drawable/editbox_background"
+            android:drawableStart="@android:drawable/ic_menu_search"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <Button style="?android:attr/buttonStyleSmall" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="All" android:backgroundTint="#6200EE"/>
+        <Button style="?android:attr/buttonStyleSmall" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Today" android:backgroundTint="#EEEEEE" android:textColor="#333333" android:layout_marginStart="8dp"/>
+        <Button style="?android:attr/buttonStyleSmall" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Week" android:backgroundTint="#EEEEEE" android:textColor="#333333" android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No events posted yet.\nCheck back later!"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textColor="#888888"/>
+    </RelativeLayout>
+</LinearLayout>
