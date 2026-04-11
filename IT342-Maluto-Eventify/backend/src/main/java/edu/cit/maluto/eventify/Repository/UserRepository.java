@@ -1,6 +1,6 @@
-package edu.cit.maluto.eventify.repository;
+package edu.cit.maluto.eventify.Repository;
 
-import edu.cit.maluto.eventify.model.User;
+import edu.cit.maluto.eventify.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

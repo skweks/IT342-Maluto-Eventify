@@ -1,81 +1,148 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Alert from './component/Alert'; // Import the custom Alert component
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-  // State for managing the custom alert
-  const [alertConfig, setAlertConfig] = useState({ message: '', type: 'error' });
+    const handleLogin = async (e) => {
+            e.preventDefault();
+            try {
+                const response = await axios.post('http://localhost:8080/api/v1/auth/login', {
+                    email,
+                    password
+                });
 
-  const navigate = useNavigate();
+                const user = response.data;
+                // Store user info to check role for theming
+                localStorage.setItem('user', JSON.stringify(user));
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:8080/api/v1/auth/login', formData);
+                // Direct to dashboard based on role
+                if (user.role === 'ORGANIZER') {
+                    navigate('/organizer-dashboard');
+                } else {
+                    navigate('/student-dashboard');
+                }
+            } catch (err) {
+                setError('Invalid email or password');
+            }
+        };
 
-      // Show success alert using Alert.jsx logic
-      setAlertConfig({ message: "Login successful!", type: 'success' });
+    return (
+        <div className="min-h-screen bg-gray-100 flex flex-col font-sans">
+            {/* Header */}
+            <div className="p-6">
+                <h1 className="text-xl font-bold text-blue-600">Eventify</h1>
+            </div>
 
-      // Store token/user data if necessary
-      localStorage.setItem('token', response.data.token);
+            {/* Main Content */}
+            <div className="flex-1 flex items-center justify-center p-4">
+                <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden flex min-h-[500px]">
 
-      // Delay navigation so the user sees the success message
-      setTimeout(() => navigate('/dashboard'), 1500);
-    } catch (err) {
-      // Show error alert for failed attempts
-      setAlertConfig({
-        message: err.response?.data || "Invalid email or password",
-        type: 'error'
-      });
-    }
-  };
+                    {/* Left Side - Gray Background */}
+                    <div className="w-1/2 bg-gray-200 flex flex-col items-center justify-center p-12 text-center">
+                        <div className="mb-6">
+                            {/* Graduation Cap Icon */}
+                            <h1 style={{ fontSize: '60px' }}>🎓</h1>
+                        </div>
+                        <h2 className="text-xl font-semibold text-gray-800 mb-2">Discover Campus Events</h2>
+                        <p className="text-gray-500 text-sm max-w-xs">
+                            Log in to register for webinars, parties, and club activities.
+                        </p>
+                    </div>
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-      {/* Conditionally render the Alert component */}
-      {alertConfig.message && (
-        <Alert
-          message={alertConfig.message}
-          type={alertConfig.type}
-          onClose={() => setAlertConfig({ message: '', type: 'error' })}
-        />
-      )}
+                    {/* Right Side - Login Form */}
+                    <div className="w-1/2 bg-white flex flex-col justify-center p-12">
+                        <div className="max-w-sm mx-auto w-full">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-1">Log In</h2>
+                            <p className="text-gray-500 text-sm mb-8">Welcome back! Please enter your details.</p>
 
-      <div className="w-full max-w-md bg-white p-10 rounded-3xl shadow-lg text-center">
-        <h1 className="text-[#ff9c5e] font-bold text-3xl mb-8">Eventify</h1>
+                            {error && (
+                                <div className="text-red-500 text-sm mb-4 bg-red-50 px-4 py-2 rounded">
+                                    {error}
+                                </div>
+                            )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="email"
-            placeholder="University Email"
-            className="w-full border p-3.5 rounded-xl outline-none"
-            onChange={e => setFormData({...formData, email: e.target.value})}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border p-3.5 rounded-xl outline-none"
-            onChange={e => setFormData({...formData, password: e.target.value})}
-            required
-          />
-          <button
-            type="submit"
-            className="w-full bg-[#ff9c5e] text-white py-4 rounded-xl font-bold mt-4 transition"
-          >
-            Log In
-          </button>
-        </form>
+                            <form onSubmit={handleLogin} className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        University Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        placeholder="student@cit.edu"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                    />
+                                </div>
 
-        <p className="mt-8 text-sm">
-          Don't have an account? <Link to="/register" className="text-[#ff9c5e] font-bold">Register</Link>
-        </p>
-      </div>
-    </div>
-  );
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Password
+                                    </label>
+                                    <input
+                                        type="password"
+                                        placeholder="••••••••"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center">
+                                        <input
+                                            type="checkbox"
+                                            id="remember"
+                                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                            checked={rememberMe}
+                                            onChange={(e) => setRememberMe(e.target.checked)}
+                                        />
+                                        <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
+                                            Remember me
+                                        </label>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="text-sm text-blue-600 hover:underline font-medium"
+                                        onClick={() => navigate('/forgot-password')}
+                                    >
+                                        Forgot password?
+                                    </button>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-md transition duration-200 text-sm"
+                                >
+                                    Sign in
+                                </button>
+                            </form>
+
+                            <div className="mt-6 text-center">
+                                <p className="text-sm text-gray-600">
+                                    Don't have an account?{' '}
+                                    <button
+                                        onClick={() => navigate('/register')}
+                                        className="text-blue-600 hover:underline font-medium"
+                                    >
+                                        Sign up
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default Login;
